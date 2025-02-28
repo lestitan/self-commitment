@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  // Relations
+  contracts      Contract[]
+  successStories SuccessStory[]
+
+  @@map("users")
+}
+
+model Contract {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  title       String
+  description String?
+  amount      Decimal  @db.Decimal(10, 2)
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  status      String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  // Relations
+  user           User            @relation(fields: [userId], references: [id])
+  payments       Payment[]
+  successStories SuccessStory[]
+
+  @@map("contracts")
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  contractId      String   @map("contract_id")
+  amount          Decimal  @db.Decimal(10, 2)
+  status          String
+  stripePaymentId String?  @map("stripe_payment_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  // Relations
+  contract        Contract @relation(fields: [contractId], references: [id])
+
+  @@map("payments")
+}
+
+model SuccessStory {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  contractId  String   @map("contract_id")
+  title       String
+  content     String
+  isPublished Boolean  @default(false) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id])
+  contract    Contract @relation(fields: [contractId], references: [id])
+
+  @@map("success_stories")
+}
