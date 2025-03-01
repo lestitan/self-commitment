@@ -1,0 +1,75 @@
+# Self-Commitment Platform - Implementation Progress
+
+## ✅ Completed
+- [x] Project setup with Next.js
+- [x] Initial folder structure created
+- [x] Prisma schema defined
+- [x] Prisma migrations created and applied
+- [x] Docker setup for PostgreSQL and Redis
+- [x] Database connection configured
+- [x] Contract types defined
+- [x] Contract service created
+- [x] API routes for contract CRUD operations
+- [x] Basic UI components (shadcn) added
+- [x] Contract form component created
+- [x] Authentication setup with Clerk
+- [x] Protected routes with Clerk middleware
+- [x] Sign-in and sign-up pages
+- [x] Navigation bar with authentication state
+- [x] Dashboard page structure
+- [x] Contract listing component for dashboard
+- [x] Contract detail page
+- [x] Stripe payment foundation (service, API routes)
+- [x] Homepage with "Commit Now" button
+- [x] Commitment form modal
+- [x] PDF generation for commitment scrolls
+- [x] PDF preview functionality
+
+## 🔄 In Progress
+- [ ] Payment integration with Stripe
+  - [x] Stripe client setup
+  - [x] Payment service
+  - [x] Payment processing endpoint
+  - [x] Webhook handler
+  - [x] Connection to commitment form
+  - [ ] Payment flow testing
+
+## ⏱️ Pending
+- [ ] Payment Flow Completion
+  - [ ] Payment confirmation handling
+  - [ ] Payment receipts
+  - [ ] Email notifications with commitment PDF
+
+- [ ] Contract Management
+  - [ ] Contract status update functionality
+  - [ ] Contract completion verification
+  - [ ] Contract cancellation functionality
+  - [ ] Email notifications
+
+- [ ] Success Stories
+  - [ ] Success story form
+  - [ ] Success story listing
+  - [ ] Success story detail page
+
+- [ ] Admin Features
+  - [ ] Admin dashboard
+  - [ ] User management
+  - [ ] Contract moderation
+  - [ ] Success story moderation
+
+- [ ] Performance Optimization
+  - [ ] Redis caching implementation
+  - [ ] Database query optimization
+  - [ ] Static generation for public pages
+
+- [ ] Testing & Deployment
+  - [ ] Unit tests
+  - [ ] E2E tests
+  - [ ] Vercel deployment setup
+
+## Next Steps (Priority Order)
+1. Install new dependencies: `npm install jspdf jspdf-autotable @radix-ui/react-dialog`
+2. Test full payment flow
+3. Implement contract completion/verification process
+4. Add success stories functionality
+5. Implement admin features
