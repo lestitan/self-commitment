@@ -1,17 +1,24 @@
 import { prisma } from '@/lib/prisma';
-import { ContractCreate, ContractStatus, ContractUpdate } from '@/types/contract';
+import { Contract, ContractCreate, ContractUpdate, ContractStatus } from '@/types/contract';
+import { Decimal } from "@prisma/client/runtime/library";
 
 export class ContractService {
   /**
    * Create a new contract
    */
   static async createContract(userId: string, data: ContractCreate) {
+    // Ensure all dates are Date objects and not undefined
+    const startDate = data.startDate || new Date();
+    const endDate = data.endDate || (data.deadline ? new Date(data.deadline) : new Date());
+
     return prisma.contract.create({
       data: {
         ...data,
         userId,
-        // Default to DRAFT status if not provided
-        status: data.status || ContractStatus.DRAFT
+        startDate,
+        endDate,
+        status: data.status || ContractStatus.DRAFT,
+        amount: new Decimal(data.amount || 0)
       }
     });
   }
