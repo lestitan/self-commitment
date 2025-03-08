@@ -104,7 +104,12 @@ export function ContractForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form id="contract-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form 
+          id="contract-form" 
+          onSubmit={handleSubmit(onSubmit)} 
+          className="space-y-4"
+          role="form"
+        >
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input

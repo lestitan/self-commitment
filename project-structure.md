@@ -6,6 +6,8 @@
 - `docker-compose.yml` - Docker configuration for PostgreSQL and Redis
 - `eslint.config.mjs` - ESLint configuration
 - `implementation-checklist.md` - Development progress tracking
+- `jest.config.mjs` - Jest configuration for testing
+- `jest.setup.js` - Jest DOM testing configuration
 - `next.config.ts` - Next.js configuration
 - `package.json` - Project dependencies
 - `postcss.config.mjs` - PostCSS configuration
@@ -72,6 +74,31 @@
 ### Types (/types)
 - `contract.ts` - Contract and Payment type definitions with enums
 
+### Testing (/test-utils & /__tests__)
+- `/test-utils/setup.ts` - Jest setup file with DOM testing extensions
+- `/test-utils/jest.setup.ts` - Typescript definitions for Jest
+- `/test-utils/api-setup.ts` - Setup for API route testing
+- `/test-utils/api-test-helpers.ts` - Mock implementations for Next.js API testing
+
+#### Component Tests
+- `/__tests__/components/forms/contract-form.test.tsx` - Tests for contract form
+- `/__tests__/components/forms/commitment-modal.test.tsx` - Tests for commitment modal
+- `/__tests__/components/dashboard/contract-list.test.tsx` - Tests for contract list component
+- `/__tests__/components/ui/nav-bar.test.tsx` - Tests for navigation bar
+
+#### API Tests
+- `/__tests__/api/contracts.test.ts` - Tests for contracts API endpoints
+
+#### Service Tests
+- `/__tests__/services/contract.service.test.ts` - Tests for contract service
+- `/__tests__/services/payment.service.test.ts` - Tests for payment service
+
+#### Library Tests
+- `/__tests__/lib/pdf-generator.test.ts` - Tests for PDF generator
+
+#### Type Tests
+- `/__tests__/types/contract.test.ts` - Tests for contract types
+
 ## Public Assets (/public)
 - `file.svg`
 - `globe.svg`
@@ -97,6 +124,15 @@
 - `clsx` - Class name utilities
 - `tailwindcss` - CSS framework
 - `lucide-react` - Icons
+- `zod` - Schema validation and type inference
+- `react-hook-form` - Form state management
+
+### Testing Dependencies
+- `jest` - Testing framework
+- `jest-environment-jsdom` - DOM environment for Jest
+- `@testing-library/jest-dom` - DOM testing utilities
+- `@testing-library/react` - React testing utilities
+- `@testing-library/user-event` - User event simulation
 
 ## Environment Variables Needed
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk public key
