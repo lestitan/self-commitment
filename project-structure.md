@@ -60,6 +60,8 @@
 - `/ui/label.tsx` - Label component (shadcn)
 - `/ui/textarea.tsx` - Textarea component (shadcn)
 - `/ui/nav-bar.tsx` - Navigation bar component with auth states
+- `/providers/stripe-provider.tsx` - Stripe provider component
+- `/providers/mock-stripe-elements.tsx` - Mock Stripe elements provider
 
 ### Library (/lib)
 - `prisma.ts` - Prisma client instance
@@ -67,6 +69,7 @@
 - `pdf-generator.ts` - Client-side PDF generator for commitment scrolls
 - `pdf-generator-server.ts` - Server-side PDF generator
 - `utils.ts` - Utility functions
+- `mock-stripe.ts` - Mock Stripe implementation
 
 ### Services (/services)
 - `contract.service.ts` - Contract business logic with Prisma integration

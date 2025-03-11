@@ -17,16 +17,13 @@ import {
 } from "@/components/ui/dialog";
 import { downloadPDF, getPDFBase64 } from "@/lib/pdf-generator";
 import { Contract } from "@/types/contract";
-import { loadStripe } from "@stripe/stripe-js";
 import {
-  Elements,
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-
-// Stripe public key - add your key here
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
+import { StripeProvider, MockPaymentElement } from "@/components/providers/stripe-provider";
+import { useMockStripe } from "@/components/providers/mock-stripe-elements";
 
 interface CommitmentModalProps {
   children: React.ReactNode;
@@ -43,44 +40,73 @@ interface CheckoutFormProps {
 function CheckoutForm({ amount, contractId, onSuccess, onError }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
+  const mockStripe = useMockStripe();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Check if we're using the mock implementation
+  const usingMockImplementation = !stripe && mockStripe.stripe !== null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
+    if (!stripe && !usingMockImplementation) {
       return;
     }
 
     setIsProcessing(true);
     setErrorMessage("");
 
-    // Confirm payment
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/payment-confirmation`,
-      },
-      redirect: "if_required",
-    });
+    try {
+      // Use either real Stripe or our mock implementation
+      if (usingMockImplementation) {
+        // Mock implementation
+        const { error, paymentIntent } = await mockStripe.stripe!.confirmPayment({
+          elements: mockStripe.elements!,
+          confirmParams: {
+            return_url: `${window.location.origin}/payment-success`,
+          },
+        });
 
-    if (error) {
+        if (error) {
+          throw error;
+        }
+
+        onSuccess(paymentIntent);
+      } else {
+        // Real Stripe implementation
+        const { error, paymentIntent } = await stripe!.confirmPayment({
+          elements: elements!,
+          confirmParams: {
+            return_url: `${window.location.origin}/payment-success?contract_id=${contractId}`,
+          },
+          redirect: "if_required",
+        });
+
+        if (error) {
+          throw error;
+        } else if (paymentIntent && paymentIntent.status === "succeeded") {
+          onSuccess(paymentIntent);
+        }
+      }
+    } catch (error: any) {
       setErrorMessage(error.message || "An error occurred with your payment");
       onError(error);
-    } else if (paymentIntent && paymentIntent.status === "succeeded") {
-      onSuccess(paymentIntent);
+    } finally {
+      setIsProcessing(false);
     }
-
-    setIsProcessing(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <PaymentElement className="mb-6" />
+      {usingMockImplementation ? (
+        <MockPaymentElement className="mb-6" />
+      ) : (
+        <PaymentElement className="mb-6" />
+      )}
       <Button 
         type="submit" 
-        disabled={!stripe || isProcessing} 
+        disabled={((!stripe && !usingMockImplementation) || isProcessing)}
         className="w-full"
       >
         {isProcessing ? "Processing..." : `Pay $${amount}`}
@@ -218,8 +244,10 @@ export function CommitmentModal({ children }: CommitmentModalProps) {
 
   const handlePaymentSuccess = (paymentIntent: any) => {
     setPaymentSuccess(true);
-    // You could redirect to a success page or show a success message
-    // router.push(`/contracts/${contractId}`);
+    // Redirect to payment success page with query params
+    if (contractId) {
+      router.push(`/payment-success?contract_id=${contractId}&payment_intent=${paymentIntent.id}`);
+    }
   };
 
   const handlePaymentError = (error: any) => {
@@ -277,7 +305,6 @@ export function CommitmentModal({ children }: CommitmentModalProps) {
                   className="col-span-3"
                   value={formData.description}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
@@ -385,14 +412,14 @@ export function CommitmentModal({ children }: CommitmentModalProps) {
                     To finalize your commitment, please make a payment of ${formData.stakeAmount}.
                   </p>
                   
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <StripeProvider clientSecret={clientSecret}>
                     <CheckoutForm
                       amount={formData.stakeAmount || 0}
                       contractId={contractId || ""}
                       onSuccess={handlePaymentSuccess}
                       onError={handlePaymentError}
                     />
-                  </Elements>
+                  </StripeProvider>
                 </div>
               ) : (
                 <div className="w-full text-center">
