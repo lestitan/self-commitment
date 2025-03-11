@@ -90,4 +90,38 @@ export class ContractService {
       }
     });
   }
+
+  /**
+   * Verify evidence for contract completion
+   */
+  static async verifyEvidence(contractId: string, evidence: FormData): Promise<{ verified: boolean; evidenceUrl: string }> {
+    try {
+      // Here you would:
+      // 1. Upload the evidence file to a storage service (e.g., S3)
+      // 2. Verify the file type and content
+      // 3. Return the result with a URL to the uploaded evidence
+
+      // For now, we'll simulate this process
+      const file = evidence.get('file') as File;
+      if (!file) {
+        throw new Error('No file provided');
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('application/pdf')) {
+        throw new Error('Invalid file type');
+      }
+
+      // Simulate file upload to storage
+      const evidenceUrl = `https://storage.example.com/${contractId}/${file.name}`;
+
+      return {
+        verified: true,
+        evidenceUrl,
+      };
+    } catch (error) {
+      console.error('Error verifying evidence:', error);
+      throw error;
+    }
+  }
 }

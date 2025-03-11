@@ -46,9 +46,11 @@ model Contract {
 model Payment {
   id              String   @id @default(uuid())
   contractId      String   @map("contract_id")
-  amount          Decimal  @db.Decimal(10, 2) // 8 digits before decimal, 2 after
+  amount          Decimal  @db.Decimal(10, 2)
   status          String
   stripePaymentId String?  @map("stripe_payment_id")
+  refundId        String?  @map("refund_id")
+  refundStatus    String?  @map("refund_status")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
   

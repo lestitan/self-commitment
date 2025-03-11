@@ -56,6 +56,12 @@
   - [x] Type tests
     - [x] Contract and payment status types testing
   - [x] API testing utilities
+- [x] Contract Management (Partial)
+  - [x] Contract fulfillment verification
+  - [x] Contract expiration handling
+  - [x] Refund process for successful completion
+  - [x] Database schema updates for refund tracking
+  - [x] Payment service refund functionality
 
 ## 🔄 In Progress
 - [ ] Payment Success Flow
@@ -65,17 +71,15 @@
   - [ ] Contract PDF storage
   - [ ] Payment receipt generation
 - [ ] Integration Tests
-  - [ ] Payment flow integration tests
+  - [x] Payment flow integration tests
+  - [x] Contract completion flow tests
+  - [x] Webhook handler tests
   - [ ] End-to-end tests for critical user journeys
-  - [ ] Webhook handler tests
 
 ## ⏱️ Pending
-- [ ] Contract Management
-  - [ ] Contract fulfillment verification
+- [ ] Contract Management (Remaining)
   - [ ] Evidence upload functionality
-  - [ ] Contract expiration handling
   - [ ] Contract amendment process
-  - [ ] Refund process for successful completion
 
 - [ ] Success Stories
   - [ ] Story creation form
@@ -135,14 +139,11 @@
    - Add PDF storage functionality
    
 2. Enhance test coverage:
-   - Add integration tests for payment flow
    - Add end-to-end tests for critical user journeys
-   - Add webhook handler tests
    
 3. Enhance contract management:
-   - Add verification system
-   - Implement evidence upload
-   - Create expiration handling
+   - Add evidence upload UI
+   - Create contract amendment flow
    
 4. Improve error handling:
    - Better error messages

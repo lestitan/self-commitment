@@ -21,6 +21,7 @@
 - `/migrations` - Database migrations
   - `20250226152557_init` - Initial migration
   - `20250301230434_make_user_id_optional` - Making userId optional in Contract model
+  - `20250308211425_add_payment_refund_fields` - Adding refund fields to Payment model
   - `migration_lock.toml` - Lock file for migrations
 
 ## Source Code (/src)
@@ -69,16 +70,17 @@
 
 ### Services (/services)
 - `contract.service.ts` - Contract business logic with Prisma integration
-- `payment.service.ts` - Payment processing with Stripe integration
+- `payment.service.ts` - Payment processing with Stripe integration and refund handling
 
 ### Types (/types)
-- `contract.ts` - Contract and Payment type definitions with enums
+- `contract.ts` - Contract, Payment and Refund type definitions with enums
 
 ### Testing (/test-utils & /__tests__)
 - `/test-utils/setup.ts` - Jest setup file with DOM testing extensions
 - `/test-utils/jest.setup.ts` - Typescript definitions for Jest
 - `/test-utils/api-setup.ts` - Setup for API route testing
 - `/test-utils/api-test-helpers.ts` - Mock implementations for Next.js API testing
+- `/test-utils/test-setup.ts` - Common test setup with mocked services
 
 #### Component Tests
 - `/__tests__/components/forms/contract-form.test.tsx` - Tests for contract form
@@ -88,6 +90,12 @@
 
 #### API Tests
 - `/__tests__/api/contracts.test.ts` - Tests for contracts API endpoints
+- `/__tests__/api/payments-webhook.test.ts` - Tests for Stripe webhook handler
+
+#### Integration Tests
+- `/__tests__/integration/payment-flow.test.tsx` - Tests for end-to-end payment flow
+- `/__tests__/integration/contract-completion-flow.test.tsx` - Tests for contract completion
+- `/__tests__/integration/dashboard-flow.test.tsx` - Tests for dashboard interactions
 
 #### Service Tests
 - `/__tests__/services/contract.service.test.ts` - Tests for contract service

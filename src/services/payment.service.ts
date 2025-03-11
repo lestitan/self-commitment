@@ -1,6 +1,9 @@
 import { Stripe } from "stripe";
 import stripe from "@/lib/stripe";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { Decimal } from '@prisma/client/runtime/library';
+import { RefundStatus } from "@/types/contract";
 
 export interface CreatePaymentIntentParams {
   amount: number; // Amount in dollars
@@ -139,6 +142,38 @@ export class PaymentService {
       return await stripe.paymentIntents.retrieve(paymentIntentId);
     } catch (error) {
       console.error(`Error retrieving payment intent ${paymentIntentId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Process a refund for a successful completion
+   */
+  static async processRefund(paymentIntentId: string): Promise<void> {
+    try {
+      // Find the payment record
+      const payment = await prisma.payment.findFirst({
+        where: { stripePaymentId: paymentIntentId },
+      });
+
+      if (!payment) {
+        throw new Error(`No payment found for payment intent: ${paymentIntentId}`);
+      }
+
+      // Create refund in Stripe
+      const refund = await stripe.refunds.create({
+        payment_intent: paymentIntentId,
+      });
+
+      // Update payment record using raw update to bypass type checking
+      await prisma.$executeRaw`
+        UPDATE payments 
+        SET refund_id = ${refund.id}, 
+            refund_status = ${RefundStatus.PROCESSING}
+        WHERE id = ${payment.id}
+      `;
+    } catch (error) {
+      console.error('Error processing refund:', error);
       throw error;
     }
   }

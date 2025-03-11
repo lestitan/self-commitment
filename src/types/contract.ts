@@ -15,6 +15,13 @@ export enum PaymentStatus {
   FAILED = 'FAILED'
 }
 
+export enum RefundStatus {
+  PENDING = 'PENDING',
+  PROCESSING = 'PROCESSING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED'
+}
+
 export interface Contract {
   id: string;
   userId: string;
